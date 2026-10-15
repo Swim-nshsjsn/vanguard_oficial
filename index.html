@@ -119,6 +119,16 @@
       }
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     const SUPABASE_URL = 'https://pjwrkecbcddnqfajjgjr.supabase.co/rest/v1';
     const SUPABASE_KEY = 'sb_publishable_oyWF1sCKBgjqQMic7acIUg_HZnXAiSP';
     const headers = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
@@ -133,14 +143,14 @@
         el.innerHTML = data.map(s => `
           <article class="service-card">
             <div class="img-container">
-              <img src="${s.foto}" alt="${s.nome}" style="object-fit: cover;" />
+              <img src="${escapeHtml(s.foto)}" alt="${escapeHtml(s.nome)}" style="object-fit: cover;" />
             </div>
             <div class="info">
               <span style="color: var(--neon-cyan); font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Corte</span>
-              <h3>${s.nome}</h3>
+              <h3>${escapeHtml(s.nome)}</h3>
               <div class="price-row">
-                <span>R$ ${s.preco}</span>
-                <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: normal;">${s.duracao}</span>
+                <span>R$ ${escapeHtml(s.preco)}</span>
+                <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: normal;">${escapeHtml(s.duracao || '')}</span>
               </div>
             </div>
           </article>
@@ -158,10 +168,10 @@
         el.innerHTML = data.map(g => `
           <article class="service-card" style="height: 300px;">
             <div class="img-container" style="height: 200px;">
-              <img src="${g.foto}" style="object-fit: cover;" />
+              <img src="${escapeHtml(g.foto)}" style="object-fit: cover;" />
             </div>
             <div class="info" style="padding: 16px;">
-              <p style="font-size: 0.9rem; color: var(--text-muted);">${g.descricao}</p>
+              <p style="font-size: 0.9rem; color: var(--text-muted);">${escapeHtml(g.descricao)}</p>
             </div>
           </article>
         `).join('');
@@ -177,10 +187,10 @@
         el.innerHTML = data.map((f, i) => `
           <article class="metric-card ${i % 2 === 0 ? 'magenta' : ''}">
             <div style="color: #ffaa00; font-size: 1.2rem;">${'★'.repeat(f.nota || 5)}</div>
-            <p style="color: #fff; font-style: italic;">"${f.comentario}"</p>
+            <p style="color: #fff; font-style: italic;">"${escapeHtml(f.comentario)}"</p>
             <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">
-              <img src="https://i.pravatar.cc/40?img=${i+10}" style="width: 40px; border-radius: 50%;" />
-              <strong style="font-size: 1rem;">${f.cliente}</strong>
+              <img src="https://i.pravatar.cc/40?img=${(i % 50) + 10}" style="width: 40px; border-radius: 50%;" />
+              <strong style="font-size: 1rem;">${escapeHtml(f.cliente)}</strong>
             </div>
           </article>
         `).join('');
